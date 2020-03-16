@@ -13,11 +13,11 @@ using System.Windows.Shapes;
 namespace Parcial2_MiguelGondres.UI.Registros
 {
     /// <summary>
-    /// Interaction logic for Rproductos.xaml
+    /// Interaction logic for Rparcial.xaml
     /// </summary>
-    public partial class Rproductos : Window
+    public partial class Rparcial : Window
     {
-        public Rproductos()
+        public Rparcial()
         {
             InitializeComponent();
         }
