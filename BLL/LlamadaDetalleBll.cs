@@ -11,14 +11,14 @@ namespace Parcial2_MiguelGondres.BLL
 {
     public class LlamadaDetalleBll
     {
-        public static bool Guardar(Llamada llamada)
+        public static bool Guardar(Llamadas llamada)
         {
             bool paso = false;
             Contexto db = new Contexto();
 
             try
             {
-                if (db.Llamada.Add(llamada) != null)
+                if (db.Llamadas.Add(llamada) != null)
                     paso = (db.SaveChanges() > 0);
             }
             catch (Exception)
@@ -33,7 +33,7 @@ namespace Parcial2_MiguelGondres.BLL
             return paso;
         }
 
-        public static bool Modificar(Llamada llamada)
+        public static bool Modificar(Llamadas llamada)
         {
             bool paso = false;
             Contexto db = new Contexto();
@@ -41,6 +41,10 @@ namespace Parcial2_MiguelGondres.BLL
             try
             {
                 db.Database.ExecuteSqlRaw($"Delete FROM LlamadaDetalle Where LlamadaId={llamada.LlamadaId}");
+                foreach(var item in llamada.LlamadaDetalle)
+                {
+                    db.Entry(item).State = EntityState.Added;
+                }
                 db.Entry(llamada).State = EntityState.Modified;
                 paso = (db.SaveChanges() > 0);
             }
@@ -63,7 +67,7 @@ namespace Parcial2_MiguelGondres.BLL
 
             try
             {
-                var eliminar = db.Llamada.Find(id);
+                var eliminar = db.Llamadas.Find(id);
                 db.Entry(eliminar).State = EntityState.Deleted;
                 paso = (db.SaveChanges() > 0);
             }
@@ -79,16 +83,15 @@ namespace Parcial2_MiguelGondres.BLL
             return paso;
         }
 
-        public static Llamada Buscar(int id)
+        public static Llamadas Buscar(int id)
         {
             Contexto db = new Contexto();
-            Llamada llamada = new Llamada();
+            Llamadas llamada = new Llamadas();
 
             try
             {
-                llamada = db.Llamada.Include(x => x.LlamadaDetalle)
-                    .Where(p => p.LlamadaId == id)
-                    .SingleOrDefault();
+                llamada = db.Llamadas.Where(x => x.LlamadaId == id).
+                    Include(o => o.LlamadaDetalle).SingleOrDefault();
             }
             catch (Exception)
             {
@@ -102,13 +105,13 @@ namespace Parcial2_MiguelGondres.BLL
             return llamada;
         }
 
-        public static List<Llamada> GetList(Expression<Func<Llamada, bool>> llamada)
+        public static List<Llamadas> GetList(Expression<Func<Llamadas, bool>> llamada)
         {
-            List<Llamada> lista = new List<Llamada>();
+            List<Llamadas> lista = new List<Llamadas>();
             Contexto db = new Contexto();
             try
             {
-                lista = db.Llamada.Where(llamada).ToList();
+                lista = db.Llamadas.Where(llamada).ToList();
             }
             catch (Exception)
             {

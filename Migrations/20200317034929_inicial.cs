@@ -2,12 +2,12 @@
 
 namespace Parcial2_MiguelGondres.Migrations
 {
-    public partial class initial : Migration
+    public partial class inicial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Llamada",
+                name: "Llamadas",
                 columns: table => new
                 {
                     LlamadaId = table.Column<int>(nullable: false)
@@ -16,43 +16,43 @@ namespace Parcial2_MiguelGondres.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Llamada", x => x.LlamadaId);
+                    table.PrimaryKey("PK_Llamadas", x => x.LlamadaId);
                 });
 
             migrationBuilder.CreateTable(
-                name: "llamadaDetalles",
+                name: "LlamadasDetalle",
                 columns: table => new
                 {
                     LlamadaDetalleId = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    LlamadaId = table.Column<int>(nullable: false),
                     Problemas = table.Column<string>(nullable: true),
-                    Solucion = table.Column<string>(nullable: true)
+                    Solucion = table.Column<string>(nullable: true),
+                    LlamadaId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_llamadaDetalles", x => x.LlamadaDetalleId);
+                    table.PrimaryKey("PK_LlamadasDetalle", x => x.LlamadaDetalleId);
                     table.ForeignKey(
-                        name: "FK_llamadaDetalles_Llamada_LlamadaId",
+                        name: "FK_LlamadasDetalle_Llamadas_LlamadaId",
                         column: x => x.LlamadaId,
-                        principalTable: "Llamada",
+                        principalTable: "Llamadas",
                         principalColumn: "LlamadaId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_llamadaDetalles_LlamadaId",
-                table: "llamadaDetalles",
+                name: "IX_LlamadasDetalle_LlamadaId",
+                table: "LlamadasDetalle",
                 column: "LlamadaId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "llamadaDetalles");
+                name: "LlamadasDetalle");
 
             migrationBuilder.DropTable(
-                name: "Llamada");
+                name: "Llamadas");
         }
     }
 }

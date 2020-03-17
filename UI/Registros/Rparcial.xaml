@@ -82,7 +82,7 @@
             </TextBox>
             <TextBox Name="SolucionTextBox" Margin="12,1,0,0" Grid.Column="3" Grid.ColumnSpan="2" Width="145">
                 <TextBox.Text>
-                    <Binding Path="Solucion" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay">
+                    <Binding Path="llamada.Solucion" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay">
                         <Binding.ValidationRules>
                             <ExceptionValidationRule/>
                         </Binding.ValidationRules>
@@ -92,7 +92,16 @@
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Grid.Row="7">
-            <DataGrid x:Name="DetalleDatagrid" Width="320" Height="150"></DataGrid>
+            <DataGrid x:Name="DetalleDatagrid" Width="320" Height="150">
+                <DataGrid.ItemsSource>
+                    <Binding Path="llamada.LlamadaDetalle" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay">
+                        <Binding.ValidationRules>
+                            <ExceptionValidationRule/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </DataGrid.ItemsSource>
+            </DataGrid>
+            
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Grid.Row="5" Grid.Column="5" >

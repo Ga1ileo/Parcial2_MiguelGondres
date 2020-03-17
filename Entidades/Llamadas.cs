@@ -6,19 +6,21 @@ using System.Text;
 
 namespace Parcial2_MiguelGondres.Entidades
 {
-    public class Llamada
+    public class Llamadas
     {
         [Key]
         public int LlamadaId { get; set; }
         public string Descripcion { get; set; }
 
         [ForeignKey("LlamadaId")]
-        public virtual List<LlamadaDetalle> LlamadaDetalle { get; set; }
+        public virtual List<LlamadasDetalle> LlamadaDetalle { get; set; }
         
-        public Llamada()
+        public Llamadas()
         {
             LlamadaId = 0;
             Descripcion = string.Empty;
+
+            LlamadaDetalle = new List<LlamadasDetalle>();
         }
     }
 }

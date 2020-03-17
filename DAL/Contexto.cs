@@ -9,18 +9,10 @@ namespace Parcial2_MiguelGondres.DAL
     public class Contexto : DbContext
     {
 
-        public DbSet<Llamada> Llamada { get; set; }
-        public DbSet<LlamadaDetalle> llamadaDetalles { get; set; }
+        public DbSet<Llamadas> Llamadas { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-
-            optionsBuilder.UseSqlite(@"Data Source= DAL\DATA\RParcial2.db");
-
-        }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
+            optionsBuilder.UseSqlite(@"Data Source=DAL\DATA\parcial.db");
         }
     }
 }

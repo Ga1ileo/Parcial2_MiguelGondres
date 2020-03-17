@@ -19,18 +19,26 @@ namespace Parcial2_MiguelGondres.UI.Registros
     /// </summary>
     public partial class Rparcial : Window
     {
-        public List<LlamadaDetalle> Detalle { get; set; }
-        Llamada llamada = new Llamada();
+        
+        Llamadas llamada = new Llamadas();
+        public List<LlamadasDetalle> Detalle { get; set; }
         
         public Rparcial()
         {
             InitializeComponent();
             this.DataContext = llamada;
+            this.Detalle = new List<LlamadasDetalle>();
             IdTextBox.Text = "0";
            
         }
 
         private void CargarGrid()
+        {
+            DetalleDatagrid.ItemsSource = null;
+            DetalleDatagrid.ItemsSource = this.Detalle;
+        }
+
+        private void Actualizar()
         {
             this.DataContext = null;
             this.DataContext = llamada;
@@ -39,18 +47,36 @@ namespace Parcial2_MiguelGondres.UI.Registros
         {
             IdTextBox.Text = "0";
             DescripcionTextbox.Text = string.Empty;
-            ProblemaTextBox.Text = string.Empty;
-            SolucionTextBox.Text = string.Empty;
 
-            this.Detalle = new List<LlamadaDetalle>();
+
+            this.Detalle = new List<LlamadasDetalle>();
             CargarGrid();
         }
 
         private bool ExisteEnBaseDatos()
         {
-            llamada = LlamadaBll.Buscar(Convert.ToInt32(IdTextBox.Text));
-
+            Llamadas llamada = LlamadaDetalleBll.Buscar(Convert.ToInt32(IdTextBox.Text));
             return (llamada != null);
+        }
+
+        private bool Validar()
+        {
+            bool paso = true;
+
+            if (string.IsNullOrEmpty(DescripcionTextbox.Text))
+            {
+                MessageBox.Show("Este campo no puede estar vacio");
+                paso = false;
+                DescripcionTextbox.Focus();
+            }
+
+            if(this.Detalle.Count == 0)
+            {
+                MessageBox.Show("Debe agregar lo indicado");
+                paso = false;
+            }
+
+            return paso;
         }
         private void NuevoButton_Click(object sender, RoutedEventArgs e)
         {
@@ -61,68 +87,88 @@ namespace Parcial2_MiguelGondres.UI.Registros
         {
             bool paso = false;
 
-            if (string.IsNullOrWhiteSpace(IdTextBox.Text))
-                paso = LlamadaBll.Guardar(llamada);
+            if (!Validar())
+                return;
+
+            if (string.IsNullOrEmpty(IdTextBox.Text) || IdTextBox.Text == "0")
+                paso = LlamadaDetalleBll.Guardar(llamada);
             else
             {
                 if (!ExisteEnBaseDatos())
                 {
-                    MessageBox.Show("No ha guardado");
+                    MessageBox.Show("No pudo ser Guardado");
                     return;
                 }
-                paso = LlamadaBll.Modificar(llamada);
+                paso = LlamadaDetalleBll.Modificar(llamada);
             }
 
             if (paso)
             {
-                Limpiar();
                 MessageBox.Show("Guardado");
+                Limpiar();
             }
             else
             {
-                MessageBox.Show("No Guardo");
+                MessageBox.Show("No Guardado");
             }
         }
 
         private void EliminarButton_Click(object sender, RoutedEventArgs e)
         {
             int id;
-            id = Convert.ToInt32(IdTextBox.Text);
+            int.TryParse(IdTextBox.Text, out id);
 
             Limpiar();
 
-            if (LlamadaBll.Eliminar(id))
+            if (LlamadaDetalleBll.Eliminar(id))
+            {
                 MessageBox.Show("Eliminado");
+            }
             else
-                MessageBox.Show(IdTextBox.Text, "No se pudo eliminar");
+            {
+                MessageBox.Show("No se pudo eliminar");
+            }    
         }
 
         private void BuscarButton_Click(object sender, RoutedEventArgs e)
         {
-            Llamada anterior = LlamadaBll.Buscar(Convert.ToInt32(IdTextBox.Text));
+            int id;
+            int.TryParse(IdTextBox.Text, out id);
 
-            if(anterior != null)
+            llamada = LlamadaDetalleBll.Buscar(id);
+
+            if(llamada != null)
             {
-                llamada = anterior;
-                CargarGrid();
-            }
-            else
-            {
-                MessageBox.Show("No lo encuentro");
+                this.DataContext = llamada;
+                Actualizar();
             }
         }
 
         private void MasButtonProblema_Click(object sender, RoutedEventArgs e)
         {
-            llamada.LlamadaDetalle.Add(new LlamadaDetalle(Convert.ToInt32(IdTextBox.Text), ProblemaTextBox.Text, SolucionTextBox.Text));
+            if (DetalleDatagrid.Items != null)
+                this.Detalle = (List<LlamadasDetalle>)DetalleDatagrid.ItemsSource;
+
+            this.Detalle.Add(new LlamadasDetalle()
+            {
+                LlamadaDetalleId = 0,
+                Problemas = ProblemaTextBox.Text,
+                Solucion = SolucionTextBox.Text,
+            });
             CargarGrid();
-            ProblemaTextBox.Focus();
+            ProblemaTextBox.Text = string.Empty;
+            SolucionTextBox.Text = string.Empty;
+
         }
 
         private void RemoverButton_Click(object sender, RoutedEventArgs e)
         {
-            Detalle.RemoveAt(DetalleDatagrid.FrozenColumnCount);
-            CargarGrid();
+            if(DetalleDatagrid.Items.Count > 0 && DetalleDatagrid.SelectedItem != null)
+            {
+                this.Detalle.RemoveAt(DetalleDatagrid.SelectedIndex);
+                CargarGrid();
+            }
         }
+
     }
 }
