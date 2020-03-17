@@ -90,7 +90,7 @@ namespace Parcial2_MiguelGondres.UI.Registros
             if (!Validar())
                 return;
 
-            if (string.IsNullOrEmpty(IdTextBox.Text) || IdTextBox.Text == "0")
+            if (string.IsNullOrWhiteSpace(IdTextBox.Text) || IdTextBox.Text == "0")
                 paso = LlamadaDetalleBll.Guardar(llamada);
             else
             {
