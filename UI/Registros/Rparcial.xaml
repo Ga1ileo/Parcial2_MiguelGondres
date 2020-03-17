@@ -10,8 +10,18 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
@@ -21,9 +31,19 @@
         </Grid.RowDefinitions>
 
         <StackPanel Orientation="Horizontal">
-            <TextBlock Name="IdLabel" Text="Id" Margin="30,5,5,5" Width="35"/>
-            <TextBox Name="IdTextBox" Margin="12,1,0,0" Grid.Column="1" Grid.ColumnSpan="2" Width="145"/>
-            <Button x:Name="BuscarButton" Content="     Buscar" HorizontalAlignment="Left" Width="65" Grid.Column="2" Height="25">
+            <TextBlock Name="IdLabel" Text="Llamada Id" Margin="30,5,5,5" Width="65"/>
+
+            <TextBox Name="IdTextBox" Margin="12,1,0,0" Grid.Column="1" Grid.ColumnSpan="2" Width="145">
+                <TextBox.Text>
+                    <Binding Path="LlamadaId" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay">
+                        <Binding.ValidationRules>
+                            <ExceptionValidationRule/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+
+            <Button x:Name="BuscarButton" Content="     Buscar" HorizontalAlignment="Left" Width="65" Grid.Column="2" Height="25" Click="BuscarButton_Click">
                 <Button.Background>
                     <ImageBrush ImageSource="/Resources/Buscar.png" Stretch="Uniform" AlignmentX="Left"/>
                 </Button.Background>
@@ -31,10 +51,54 @@
             </Button>
         </StackPanel>
 
-        <StackPanel Orientation="Horizontal" Grid.Row="2">
+        <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="3">
+            <TextBlock Name="Idabel" Text="Descripcion" Margin="30,5,5,5" Width="65"/>
+            
+            <TextBox Name="DescripcionTextbox" Margin="12,1,0,0" Grid.Column="1" Grid.ColumnSpan="2" Width="145">
+                <TextBox.Text>
+                    <Binding Path="Descripcion" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay">
+                        <Binding.ValidationRules>
+                            <ExceptionValidationRule/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+            
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="4">
+            <TextBlock Name="ProblemaLabel" Text="Problema" Margin="30,5,5,5" Width="65"/>
+            <TextBlock Name="SolucionLabel" Text="Solucion" Margin="100,5,5,5" Width="65"/>
+        </StackPanel>
+        
+        <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="5">
+            <TextBox Name="ProblemaTextBox" Margin="12,1,0,0" Grid.Column="3" Grid.ColumnSpan="2" Width="145">
+                <TextBox.Text>
+                    <Binding Path="Problemas" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay">
+                        <Binding.ValidationRules>
+                            <ExceptionValidationRule/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+            <TextBox Name="SolucionTextBox" Margin="12,1,0,0" Grid.Column="3" Grid.ColumnSpan="2" Width="145">
+                <TextBox.Text>
+                    <Binding Path="Solucion" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay">
+                        <Binding.ValidationRules>
+                            <ExceptionValidationRule/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="7">
+            <DataGrid x:Name="DetalleDatagrid" Width="320" Height="150"></DataGrid>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="5" Grid.Column="5" >
             <!--<TextBlock Name="IdLabel" Text="Id" Margin="30,5,5,5" Width="35"/>-->
             <!--<TextBox Name="IdTextBox" Margin="12,1,0,0" Grid.Column="1" Grid.ColumnSpan="2" Width="145"/>-->
-            <Button x:Name="MasButton" Content="     Agregar" HorizontalAlignment="Left" Width="65" Grid.Column="2" Height="25">
+            <Button x:Name="MasButtonProblema" Margin="20,0,0,0" Content="     Agregar Problema" HorizontalAlignment="Left" Width="130" Grid.Column="6" Height="25" Click="MasButtonProblema_Click">
                 <Button.Background>
                     <ImageBrush ImageSource="/Resources/Nuevo.png" Stretch="Uniform" AlignmentX="Left"/>
                 </Button.Background>
@@ -42,18 +106,26 @@
             </Button>
         </StackPanel>
         
-        <StackPanel Orientation="Horizontal" Grid.Row="7">
-            <Button x:Name="NuevoButton" Content="     Nuevo" HorizontalAlignment="Left" Width="65" Grid.Column="2" Height="25">
+        <StackPanel Orientation="Horizontal" Grid.Row="9" Grid.Column="0">
+            <Button x:Name="RemoverButton" Content="     Remover" HorizontalAlignment="Left" Width="70" Grid.Column="2" Height="25" Click="RemoverButton_Click">
+                <Button.Background>
+                    <ImageBrush ImageSource="/Resources/Eliminar.png" Stretch="Uniform" AlignmentX="Left"/>
+                </Button.Background>
+            </Button>
+        </StackPanel>
+        
+        <StackPanel Orientation="Horizontal" Grid.Row="10">
+            <Button x:Name="NuevoButton" Content="     Nuevo" Width="65" Grid.Column="2" Height="25" Click="NuevoButton_Click">
                 <Button.Background>
                     <ImageBrush ImageSource="/Resources/Nuevo.png" Stretch="Uniform" AlignmentX="Left"/>
                 </Button.Background>
             </Button>
-            <Button x:Name="GuardarButton" Content="     Guardar" HorizontalAlignment="Left" Width="65" Grid.Column="2" Height="25">
+            <Button x:Name="GuardarButton" Content="     Guardar" HorizontalAlignment="Left" Width="65" Grid.Column="2" Height="25" Click="GuardarButton_Click">
                 <Button.Background>
                     <ImageBrush ImageSource="/Resources/Guardar.png" Stretch="Uniform" AlignmentX="Left"/>
                 </Button.Background>
             </Button>
-            <Button x:Name="EliminarButton" Content="     Eliminar" HorizontalAlignment="Left" Width="65" Grid.Column="2" Height="25">
+            <Button x:Name="EliminarButton" Content="     Eliminar" HorizontalAlignment="Left" Width="65" Grid.Column="2" Height="25" Click="EliminarButton_Click">
                 <Button.Background>
                     <ImageBrush ImageSource="/Resources/Eliminar.png" Stretch="Uniform" AlignmentX="Left"/>
                 </Button.Background>

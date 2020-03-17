@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Parcial2_MiguelGondres.UI.Registros;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,12 @@ namespace Parcial2_MiguelGondres
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void RegistroButton_Click(object sender, RoutedEventArgs e)
+        {
+            Rparcial r = new Rparcial();
+            r.Show();
         }
     }
 }
