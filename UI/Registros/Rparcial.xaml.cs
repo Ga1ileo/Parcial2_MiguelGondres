@@ -20,15 +20,15 @@ namespace Parcial2_MiguelGondres.UI.Registros
     public partial class Rparcial : Window
     {
         
-        Llamadas llamada = new Llamadas();
+        Llamadas llamadas = new Llamadas();
         public List<LlamadasDetalle> Detalle { get; set; }
         
         public Rparcial()
         {
             InitializeComponent();
-            this.DataContext = llamada;
+            this.DataContext = llamadas;
             this.Detalle = new List<LlamadasDetalle>();
-            IdTextBox.Text = "0";
+            LlamadaIdTextbox.Text = "0";
            
         }
 
@@ -41,21 +41,21 @@ namespace Parcial2_MiguelGondres.UI.Registros
         private void Actualizar()
         {
             this.DataContext = null;
-            this.DataContext = llamada;
+            this.DataContext = llamadas;
         }
         private void Limpiar()
         {
-            IdTextBox.Text = "0";
+            LlamadaIdTextbox.Text = "0";
             DescripcionTextbox.Text = string.Empty;
 
 
             this.Detalle = new List<LlamadasDetalle>();
-            CargarGrid();
+            Actualizar();
         }
 
         private bool ExisteEnBaseDatos()
         {
-            Llamadas llamada = LlamadaDetalleBll.Buscar(Convert.ToInt32(IdTextBox.Text));
+            Llamadas llamada = LlamadaDetalleBll.Buscar(Convert.ToInt32(LlamadaIdTextbox.Text));
             return (llamada != null);
         }
 
@@ -86,37 +86,33 @@ namespace Parcial2_MiguelGondres.UI.Registros
         private void GuardarButton_Click(object sender, RoutedEventArgs e)
         {
             bool paso = false;
-
-            if (!Validar())
-                return;
-
-            if (string.IsNullOrWhiteSpace(IdTextBox.Text) || IdTextBox.Text == "0")
-                paso = LlamadaDetalleBll.Guardar(llamada);
+            if (string.IsNullOrWhiteSpace(LlamadaIdTextbox.Text) || LlamadaIdTextbox.Text == "0")
+                paso = LlamadaDetalleBll.Guardar(llamadas);
             else
             {
                 if (!ExisteEnBaseDatos())
                 {
-                    MessageBox.Show("No pudo ser Guardado");
+                    MessageBox.Show("No se puede modificar", "Fallo", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
-                paso = LlamadaDetalleBll.Modificar(llamada);
+                paso = LlamadaDetalleBll.Modificar(llamadas);
             }
 
             if (paso)
             {
-                MessageBox.Show("Guardado");
                 Limpiar();
+                MessageBox.Show("Guardado!!", "Exito", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             else
             {
-                MessageBox.Show("No Guardado");
+                MessageBox.Show("No se puede Guardar", "Fallo", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         private void EliminarButton_Click(object sender, RoutedEventArgs e)
         {
             int id;
-            int.TryParse(IdTextBox.Text, out id);
+            int.TryParse(LlamadaIdTextbox.Text, out id);
 
             Limpiar();
 
@@ -132,32 +128,24 @@ namespace Parcial2_MiguelGondres.UI.Registros
 
         private void BuscarButton_Click(object sender, RoutedEventArgs e)
         {
-            int id;
-            int.TryParse(IdTextBox.Text, out id);
+            Llamadas anterior = LlamadaDetalleBll.Buscar(Convert.ToInt32(LlamadaIdTextbox.Text));
 
-            llamada = LlamadaDetalleBll.Buscar(id);
-
-            if(llamada != null)
+            if (anterior != null)
             {
-                this.DataContext = llamada;
+                llamadas = anterior;
                 Actualizar();
+            }
+            else
+            {
+                MessageBox.Show("llamadas no encontrada");
             }
         }
 
         private void MasButtonProblema_Click(object sender, RoutedEventArgs e)
         {
-            if (DetalleDatagrid.Items != null)
-                this.Detalle = (List<LlamadasDetalle>)DetalleDatagrid.ItemsSource;
-
-            this.Detalle.Add(new LlamadasDetalle()
-            {
-                LlamadaDetalleId = 0,
-                Problemas = ProblemaTextBox.Text,
-                Solucion = SolucionTextBox.Text,
-            });
-            CargarGrid();
-            ProblemaTextBox.Text = string.Empty;
-            SolucionTextBox.Text = string.Empty;
+            llamadas.Detalle.Add(new LlamadasDetalle(Convert.ToInt32(LlamadaIdTextbox.Text), ProblemaTextBox.Text, SolucionTextBox.Text));
+            Actualizar();
+            ProblemaTextBox.Focus();
 
         }
 

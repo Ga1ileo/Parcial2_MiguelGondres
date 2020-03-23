@@ -9,20 +9,23 @@ namespace Parcial2_MiguelGondres.Entidades
     {
         [Key]
         public int LlamadaDetalleId { get; set; }
-        public string Problemas { get; set; }
+        public int LlamadaId { get; set; }
+        public string Problema { get; set; }
         public string Solucion { get; set; }
 
         public LlamadasDetalle()
         {
             LlamadaDetalleId = 0;
-            Problemas = string.Empty;
+            LlamadaId = 0;
+            Problema = string.Empty;
             Solucion = string.Empty;
         }
 
-        public LlamadasDetalle(int llamadaId, string problema, string solucion)
+        public LlamadasDetalle(int llamadaid, string problema, string solucion)
         {
             LlamadaDetalleId = 0;
-            Problemas = problema;
+            LlamadaId = llamadaid;
+            Problema = problema;
             Solucion = solucion;
         }
 

@@ -14,5 +14,11 @@ namespace Parcial2_MiguelGondres.DAL
         {
             optionsBuilder.UseSqlite(@"Data Source=DAL\DATA\parcial.db");
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Llamadas>().HasData(new Llamadas { LlamadaId = 1, Descripcion = "Servicio de Guitarra" });
+            modelBuilder.Entity<LlamadasDetalle>().HasData(new LlamadasDetalle { LlamadaDetalleId = 1, LlamadaId = 1, Problema = "No tengo Cuerdas de Guitarra", Solucion = "Comprar mas Cuerdas" });
+        }
     }
 }

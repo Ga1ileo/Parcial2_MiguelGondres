@@ -13,14 +13,14 @@ namespace Parcial2_MiguelGondres.Entidades
         public string Descripcion { get; set; }
 
         [ForeignKey("LlamadaId")]
-        public virtual List<LlamadasDetalle> LlamadaDetalle { get; set; }
+        public virtual List<LlamadasDetalle> Detalle { get; set; }
         
         public Llamadas()
         {
             LlamadaId = 0;
             Descripcion = string.Empty;
 
-            LlamadaDetalle = new List<LlamadasDetalle>();
+            Detalle = new List<LlamadasDetalle>();
         }
     }
 }

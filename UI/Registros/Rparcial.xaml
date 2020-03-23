@@ -33,9 +33,9 @@
         <StackPanel Orientation="Horizontal">
             <TextBlock Name="IdLabel" Text="Llamada Id" Margin="30,5,5,5" Width="65"/>
 
-            <TextBox Name="IdTextBox" Margin="12,1,0,0" Grid.Column="1" Grid.ColumnSpan="2" Width="145">
+            <TextBox Name="LlamadaIdTextbox" Margin="12,1,0,0" Grid.Column="1" Grid.ColumnSpan="2" Width="145">
                 <TextBox.Text>
-                    <Binding Path="LlamadaId" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay">
+                    <Binding Path="LlamadaDetalleId" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay">
                         <Binding.ValidationRules>
                             <ExceptionValidationRule/>
                         </Binding.ValidationRules>
@@ -73,7 +73,7 @@
         <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="5">
             <TextBox Name="ProblemaTextBox" Margin="12,1,0,0" Grid.Column="3" Grid.ColumnSpan="2" Width="145">
                 <TextBox.Text>
-                    <Binding Path="Problemas" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay">
+                    <Binding Path="Problema" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay">
                         <Binding.ValidationRules>
                             <ExceptionValidationRule/>
                         </Binding.ValidationRules>
@@ -82,7 +82,7 @@
             </TextBox>
             <TextBox Name="SolucionTextBox" Margin="12,1,0,0" Grid.Column="3" Grid.ColumnSpan="2" Width="145">
                 <TextBox.Text>
-                    <Binding Path="llamada.Solucion" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay">
+                    <Binding Path="Solucion" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay">
                         <Binding.ValidationRules>
                             <ExceptionValidationRule/>
                         </Binding.ValidationRules>
@@ -94,7 +94,7 @@
         <StackPanel Orientation="Horizontal" Grid.Row="7">
             <DataGrid x:Name="DetalleDatagrid" Width="320" Height="150">
                 <DataGrid.ItemsSource>
-                    <Binding Path="llamada.LlamadaDetalle" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay">
+                    <Binding Path="Detalle" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay">
                         <Binding.ValidationRules>
                             <ExceptionValidationRule/>
                         </Binding.ValidationRules>

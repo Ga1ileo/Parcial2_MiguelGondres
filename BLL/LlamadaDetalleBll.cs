@@ -11,15 +11,14 @@ namespace Parcial2_MiguelGondres.BLL
 {
     public class LlamadaDetalleBll
     {
-        public static bool Guardar(Llamadas llamada)
+        public static bool Guardar(Llamadas llamadas)
         {
             bool paso = false;
-            Contexto db = new Contexto();
-
+            Contexto contexto = new Contexto();
             try
             {
-                if (db.Llamadas.Add(llamada) != null)
-                    paso = (db.SaveChanges() > 0);
+                contexto.Llamadas.Add(llamadas);
+                paso = contexto.SaveChanges() > 0;
             }
             catch (Exception)
             {
@@ -27,26 +26,22 @@ namespace Parcial2_MiguelGondres.BLL
             }
             finally
             {
-                db.Dispose();
+                contexto.Dispose();
             }
 
             return paso;
         }
 
-        public static bool Modificar(Llamadas llamada)
+        public static Llamadas Buscar(int id)
         {
-            bool paso = false;
-            Contexto db = new Contexto();
-
+            Contexto contexto = new Contexto();
+            Llamadas llamadas = new Llamadas();
             try
             {
-                db.Database.ExecuteSqlRaw($"Delete FROM LlamadaDetalle Where LlamadaId={llamada.LlamadaId}");
-                foreach(var item in llamada.LlamadaDetalle)
-                {
-                    db.Entry(item).State = EntityState.Added;
-                }
-                db.Entry(llamada).State = EntityState.Modified;
-                paso = (db.SaveChanges() > 0);
+                llamadas = contexto.Llamadas.Where(p => p.LlamadaId == id)
+                    .Include(m => m.Detalle)
+                    .SingleOrDefault();
+
             }
             catch (Exception)
             {
@@ -54,7 +49,33 @@ namespace Parcial2_MiguelGondres.BLL
             }
             finally
             {
-                db.Dispose();
+                contexto.Dispose();
+            }
+
+            return llamadas;
+        }
+
+        public static bool Modificar(Llamadas llamadas)
+        {
+            bool paso = false;
+            Contexto contexto = new Contexto();
+            try
+            {
+                contexto.Database.ExecuteSqlRaw($"DELETE FROM LlamadasDetalles Where LlamadaId={llamadas.LlamadaId}");
+                foreach (var anterior in llamadas.Detalle)
+                {
+                    contexto.Entry(anterior).State = EntityState.Added;
+                }
+                contexto.Entry(llamadas).State = EntityState.Modified;
+                paso = (contexto.SaveChanges() > 0);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                contexto.Dispose();
             }
 
             return paso;
@@ -63,13 +84,12 @@ namespace Parcial2_MiguelGondres.BLL
         public static bool Eliminar(int id)
         {
             bool paso = false;
-            Contexto db = new Contexto();
-
+            Contexto contexto = new Contexto();
             try
             {
-                var eliminar = db.Llamadas.Find(id);
-                db.Entry(eliminar).State = EntityState.Deleted;
-                paso = (db.SaveChanges() > 0);
+                var eliminar = contexto.Llamadas.Find(id);
+                contexto.Entry(eliminar).State = EntityState.Deleted;
+                paso = contexto.SaveChanges() > 0;
             }
             catch (Exception)
             {
@@ -77,41 +97,18 @@ namespace Parcial2_MiguelGondres.BLL
             }
             finally
             {
-                db.Dispose();
+                contexto.Dispose();
             }
-
             return paso;
         }
 
-        public static Llamadas Buscar(int id)
-        {
-            Contexto db = new Contexto();
-            Llamadas llamada = new Llamadas();
-
-            try
-            {
-                llamada = db.Llamadas.Where(x => x.LlamadaId == id).
-                    Include(o => o.LlamadaDetalle).SingleOrDefault();
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            finally
-            {
-                db.Dispose();
-            }
-
-            return llamada;
-        }
-
-        public static List<Llamadas> GetList(Expression<Func<Llamadas, bool>> llamada)
+        public static List<Llamadas> GetList(Expression<Func<Llamadas, bool>> llamadas)
         {
             List<Llamadas> lista = new List<Llamadas>();
-            Contexto db = new Contexto();
+            Contexto contexto = new Contexto();
             try
             {
-                lista = db.Llamadas.Where(llamada).ToList();
+                lista = contexto.Llamadas.Where(llamadas).ToList();
             }
             catch (Exception)
             {
@@ -119,9 +116,8 @@ namespace Parcial2_MiguelGondres.BLL
             }
             finally
             {
-                db.Dispose();
+                contexto.Dispose();
             }
-
             return lista;
         }
     }
