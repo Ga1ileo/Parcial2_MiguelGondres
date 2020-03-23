@@ -19,23 +19,22 @@ namespace Parcial2_MiguelGondres.UI.Registros
     /// </summary>
     public partial class Rparcial : Window
     {
-        
         Llamadas llamadas = new Llamadas();
-        public List<LlamadasDetalle> Detalle { get; set; }
-        
         public Rparcial()
         {
             InitializeComponent();
             this.DataContext = llamadas;
-            this.Detalle = new List<LlamadasDetalle>();
-            LlamadaIdTextbox.Text = "0";
-           
+            DescripcionTextbox.Text = "0";
+
         }
 
-        private void CargarGrid()
+        private void Limpiar()
         {
-            DetalleDatagrid.ItemsSource = null;
-            DetalleDatagrid.ItemsSource = this.Detalle;
+            LlamadaIdTextbox.Text = "0";
+            DescripcionTextbox.Text = string.Empty;
+
+            DetalleDatagrid.ItemsSource = new List<LlamadasDetalle>();
+            Actualizar();
         }
 
         private void Actualizar()
@@ -43,44 +42,11 @@ namespace Parcial2_MiguelGondres.UI.Registros
             this.DataContext = null;
             this.DataContext = llamadas;
         }
-        private void Limpiar()
-        {
-            LlamadaIdTextbox.Text = "0";
-            DescripcionTextbox.Text = string.Empty;
-
-
-            this.Detalle = new List<LlamadasDetalle>();
-            Actualizar();
-        }
 
         private bool ExisteEnBaseDatos()
         {
-            Llamadas llamada = LlamadaDetalleBll.Buscar(Convert.ToInt32(LlamadaIdTextbox.Text));
-            return (llamada != null);
-        }
-
-        private bool Validar()
-        {
-            bool paso = true;
-
-            if (string.IsNullOrEmpty(DescripcionTextbox.Text))
-            {
-                MessageBox.Show("Este campo no puede estar vacio");
-                paso = false;
-                DescripcionTextbox.Focus();
-            }
-
-            if(this.Detalle.Count == 0)
-            {
-                MessageBox.Show("Debe agregar lo indicado");
-                paso = false;
-            }
-
-            return paso;
-        }
-        private void NuevoButton_Click(object sender, RoutedEventArgs e)
-        {
-            Limpiar();
+            llamadas = LlamadaDetalleBll.Buscar(Convert.ToInt32(LlamadaIdTextbox.Text));
+            return (llamadas != null);
         }
 
         private void GuardarButton_Click(object sender, RoutedEventArgs e)
@@ -92,7 +58,7 @@ namespace Parcial2_MiguelGondres.UI.Registros
             {
                 if (!ExisteEnBaseDatos())
                 {
-                    MessageBox.Show("No se puede modificar", "Fallo", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("No se puede Modificar porque no existe", "Fallo", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
                 paso = LlamadaDetalleBll.Modificar(llamadas);
@@ -109,21 +75,9 @@ namespace Parcial2_MiguelGondres.UI.Registros
             }
         }
 
-        private void EliminarButton_Click(object sender, RoutedEventArgs e)
+        private void NuevoButton_Click(object sender, RoutedEventArgs e)
         {
-            int id;
-            int.TryParse(LlamadaIdTextbox.Text, out id);
-
             Limpiar();
-
-            if (LlamadaDetalleBll.Eliminar(id))
-            {
-                MessageBox.Show("Eliminado");
-            }
-            else
-            {
-                MessageBox.Show("No se pudo eliminar");
-            }    
         }
 
         private void BuscarButton_Click(object sender, RoutedEventArgs e)
@@ -141,22 +95,30 @@ namespace Parcial2_MiguelGondres.UI.Registros
             }
         }
 
+        private void EliminarButton_Click(object sender, RoutedEventArgs e)
+        {
+            int id;
+            id = Convert.ToInt32(LlamadaIdTextbox.Text);
+
+            Limpiar();
+
+            if (LlamadaDetalleBll.Eliminar(id))
+                MessageBox.Show("Eliminar", "Exito", MessageBoxButton.OK, MessageBoxImage.Information);
+            else
+                MessageBox.Show(LlamadaIdTextbox.Text, "No se puede eliminar una llamada que no existe");
+        }
+
         private void MasButtonProblema_Click(object sender, RoutedEventArgs e)
         {
-            llamadas.Detalle.Add(new LlamadasDetalle(Convert.ToInt32(LlamadaIdTextbox.Text), ProblemaTextBox.Text, SolucionTextBox.Text));
+            llamadas.LlamadasDetalle.Add(new LlamadasDetalle(Convert.ToInt32(LlamadaIdTextbox.Text), ProblemaTextBox.Text, SolucionTextBox.Text));
             Actualizar();
             ProblemaTextBox.Focus();
-
         }
 
         private void RemoverButton_Click(object sender, RoutedEventArgs e)
         {
-            if(DetalleDatagrid.Items.Count > 0 && DetalleDatagrid.SelectedItem != null)
-            {
-                this.Detalle.RemoveAt(DetalleDatagrid.SelectedIndex);
-                CargarGrid();
-            }
+            llamadas.LlamadasDetalle.RemoveAt(DetalleDatagrid.FrozenColumnCount);
+            Actualizar();
         }
-
     }
 }

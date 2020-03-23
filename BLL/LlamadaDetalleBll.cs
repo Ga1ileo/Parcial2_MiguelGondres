@@ -39,7 +39,7 @@ namespace Parcial2_MiguelGondres.BLL
             try
             {
                 llamadas = contexto.Llamadas.Where(p => p.LlamadaId == id)
-                    .Include(m => m.Detalle)
+                    .Include(m => m.LlamadasDetalle)
                     .SingleOrDefault();
 
             }
@@ -62,7 +62,7 @@ namespace Parcial2_MiguelGondres.BLL
             try
             {
                 contexto.Database.ExecuteSqlRaw($"DELETE FROM LlamadasDetalles Where LlamadaId={llamadas.LlamadaId}");
-                foreach (var anterior in llamadas.Detalle)
+                foreach (var anterior in llamadas.LlamadasDetalle)
                 {
                     contexto.Entry(anterior).State = EntityState.Added;
                 }
